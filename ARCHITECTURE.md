@@ -42,6 +42,45 @@ Plus **Hedera Consensus Service** as a public, tamper-proof anchor for every ver
    attaches the anchor proof.
 5. At step 5 it posts the Teams alert.
 
+## Model backend & authentication
+
+The reasoning model (`app/llm.py`) is reached through a **3-tier resolution chain**. Each
+tier uses a different authentication method; the agent tries them in order and falls back
+on any failure, so it runs on any machine — from a fully-wired Foundry project to a clean
+clone with no credentials at all.
+
+```
+narrate()
+  1. Microsoft Foundry project
+        via azure-ai-projects + DefaultAzureCredential  (Entra ID — needs `az login`)
+        │ on failure ▼  (tier disabled for the session)
+  2. Azure OpenAI
+        via endpoint + API key                          (no Azure CLI needed)
+        │ on failure ▼
+  3. Mock
+        deterministic templated narration               (always works)
+```
+
+| Tier | Auth method | Requires | Active when |
+|------|-------------|----------|-------------|
+| **Foundry** | Entra ID (`DefaultAzureCredential`) | `az login` + project endpoint | `AZURE_AI_PROJECT_ENDPOINT` set |
+| **Azure OpenAI** | API key | endpoint + key (no CLI) | `AZURE_OPENAI_API_KEY` set |
+| **Mock** | none | nothing | no credentials present |
+
+Rules that make this safe:
+
+- **Per-call, wrapped in `try/except`.** A backend failure never breaks a reasoning step.
+- **First Foundry failure disables the tier for the session** (`_foundry_disabled`), so it
+  doesn't pay slow `DefaultAzureCredential` retries on every step (e.g. a machine without
+  `az login`). It drops straight to the key, then mock.
+- **The badge never lies.** `model_label()` reflects the *actually active* tier — `model · Foundry`,
+  `model`, or `mock` — accounting for a disabled Foundry tier.
+- **Only the prose changes.** The risk score, findings, ledger and PDF are deterministic
+  and identical across all three tiers; the tier only affects the narrative wording.
+
+> A judge cloning the repo gets no `.env` (it is git-ignored) → Tier 3 (mock) runs
+> instantly, no Azure CLI, no hang. Setup details: [CONFIGURATION.md](CONFIGURATION.md#foundry-iq--the-reasoning-model).
+
 ## Key design decisions
 
 | Decision | Why |
@@ -98,7 +137,7 @@ verification would fail. That is end-to-end cryptographic integrity.
 | `app/main.py` | FastAPI app, routes, SSE streaming |
 | `app/agent.py` | The 5-step reasoning orchestrator (generator) |
 | `app/analysis.py` | Deterministic anomaly detection, scoring, canonical fingerprint |
-| `app/llm.py` | Azure OpenAI narration with mock fallback |
+| `app/llm.py` | Model backend resolution: Foundry (Entra) → Azure key → mock |
 | `app/ledger.py` | `LedgerBackend` interface + local hash-chained ledger |
 | `app/hedera_ledger.py` | Hedera HCS backend: anchoring, access control, mirror-node verify |
 | `app/notify.py` | Teams Adaptive Card alerts (Work IQ) |
@@ -112,7 +151,8 @@ verification would fail. That is end-to-end cryptographic integrity.
 
 | Missing | Effect | Demo still works? |
 |---------|--------|-------------------|
-| Azure creds | Templated narration instead of GPT-4o | ✅ |
+| `az login` (no Entra) | Foundry tier skipped → Azure key, else mock | ✅ |
+| Azure key too | Templated mock narration (deterministic) | ✅ |
 | Teams webhook | Simulated alert | ✅ |
 | Hedera creds | Local hash-chained ledger; no anchor/verify | ✅ |
 | reportlab | `/api/report` returns 503; rest unaffected | ✅ |
