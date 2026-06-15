@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PharmaTrace AI — Drug Traceability & Counterfeit Risk Agent</title>
+<style>
+  :root {
+    --bg: #0a0e14; --panel: #121823; --panel-2: #1a2230; --line: #243043;
+    --txt: #e6edf6; --muted: #8a99ad; --teal: #2dd4bf; --teal-dim: #134e4a;
+    --info: #5b8def; --warn: #f5a623; --crit: #f0506e; --good: #34d399;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: radial-gradient(1200px 600px at 70% -10%, #142033 0%, var(--bg) 60%);
+    color: var(--txt); font: 15px/1.55 -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 22px 80px; }
+  header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .mark {
+    width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--teal), #0ea5e9); color: #04121a;
+    font-size: 22px; font-weight: 800;
+  }
+  h1 { font-size: 20px; margin: 0; letter-spacing: .2px; }
+  .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .badges { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--muted); display: inline-flex; gap: 6px; align-items: center;
+  }
+  .badge b { color: var(--teal); font-weight: 600; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+
+  .controls {
+    margin-top: 22px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  select, button {
+    font: inherit; border-radius: 10px; border: 1px solid var(--line); padding: 11px 14px;
+  }
+  select { background: var(--panel-2); color: var(--txt); min-width: 320px; flex: 1; }
+  button {
+    background: linear-gradient(135deg, var(--teal), #0ea5e9); color: #04121a;
+    font-weight: 700; border: none; cursor: pointer; padding: 11px 22px;
+  }
+  button:disabled { opacity: .5; cursor: progress; }
+  .hint { color: var(--muted); font-size: 12px; width: 100%; }
+
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; margin-top: 18px; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 14px; }
+
+  .step { display: flex; gap: 13px; padding: 13px 0; border-top: 1px solid var(--line); opacity: 0; transform: translateY(6px); animation: in .35s forwards; }
+  .step:first-child { border-top: none; }
+  @keyframes in { to { opacity: 1; transform: none; } }
+  .ico { width: 30px; height: 30px; flex: none; border-radius: 9px; display: grid; place-items: center; font-size: 15px; background: var(--panel-2); border: 1px solid var(--line); }
+  .ico.spin { animation: sp 1s linear infinite; } @keyframes sp { to { transform: rotate(360deg); } }
+  .step .t { font-weight: 600; }
+  .step .r { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+  .ev { margin-top: 7px; display: flex; flex-direction: column; gap: 4px; }
+  .ev code { background: #0b1119; border: 1px solid var(--line); color: #9fb3c8; padding: 3px 8px; border-radius: 6px; font-size: 11.5px; }
+  .sev-critical .ico { color: var(--crit); border-color: var(--crit); box-shadow: 0 0 0 3px rgba(240,80,110,.12); }
+  .sev-warning .ico { color: var(--warn); border-color: var(--warn); }
+  .sev-info .ico { color: var(--good); border-color: var(--teal-dim); }
+
+  .gauge { text-align: center; padding: 8px 0 4px; }
+  .score { font-size: 58px; font-weight: 800; line-height: 1; }
+  .score small { font-size: 20px; color: var(--muted); font-weight: 600; }
+  .band { display: inline-block; margin-top: 8px; padding: 5px 16px; border-radius: 999px; font-weight: 700; font-size: 13px; letter-spacing: .05em; }
+  .meter { height: 9px; background: var(--panel-2); border-radius: 999px; margin: 16px 0 4px; overflow: hidden; }
+  .meter > i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+
+  .route { list-style: none; padding: 0; margin: 6px 0 0; }
+  .route li { position: relative; padding: 0 0 16px 22px; color: var(--muted); font-size: 13px; }
+  .route li::before { content: ""; position: absolute; left: 4px; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--teal); }
+  .route li::after { content: ""; position: absolute; left: 8px; top: 13px; bottom: -3px; width: 1px; background: var(--line); }
+  .route li:last-child { padding-bottom: 0; } .route li:last-child::after { display: none; }
+  .route b { color: var(--txt); }
+
+  ul.actions { margin: 0; padding-left: 18px; } ul.actions li { margin: 6px 0; }
+  .alertbox { margin-top: 12px; padding: 12px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); font-size: 13px; }
+  .ledgerline { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 14px; }
+  .ok { color: var(--good); } .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">🧬</div>
+    <div>
+      <h1>PharmaTrace AI</h1>
+      <div class="sub">From batch to patient. Every step verified. Every anomaly caught.</div>
+    </div>
+    <div class="badges">
+      <span class="badge"><span class="dot"></span>Foundry IQ · <b id="mode">…</b></span>
+      <span class="badge">Ledger · <b id="backend">…</b></span>
+      <span class="badge">Work IQ · <b>Teams</b></span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <select id="batch"></select>
+    <button id="run">Analizar lote</button>
+    <div class="hint">Seleccioná un lote y mirá al agente razonar paso a paso contra el ledger inmutable.</div>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Razonamiento del agente</h2>
+      <div id="steps"><div class="empty">Esperando análisis…</div></div>
+    </section>
+
+    <aside>
+      <section class="panel">
+        <h2>Risk score</h2>
+        <div class="gauge">
+          <div class="score"><span id="scoreVal">—</span><small>/100</small></div>
+          <div class="band" id="band" style="background:var(--panel-2);color:var(--muted)">SIN ANALIZAR</div>
+        </div>
+        <div class="meter"><i id="meter" style="background:var(--muted)"></i></div>
+        <div class="ledgerline" id="ledger"></div>
+      </section>
+
+      <section class="panel" style="margin-top:18px">
+        <h2>Ruta de distribución</h2>
+        <ul class="route" id="route"><li class="empty" style="padding:0;color:var(--muted)">—</li></ul>
+      </section>
+
+      <section class="panel" style="margin-top:18px">
+        <h2>Acciones recomendadas</h2>
+        <ul class="actions" id="actions"><li class="empty" style="list-style:none;margin-left:-12px">—</li></ul>
+        <div class="alertbox" id="alert" style="display:none"></div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script>
+const ICONS = { 1: "🔎", 2: "🏭", 3: "🗺️", 4: "📊", 5: "📣" };
+const BAND_COLOR = { "CRÍTICO": "#f0506e", "ALTO": "#f5a623", "MODERADO": "#5b8def", "BAJO": "#34d399" };
+const $ = (id) => document.getElementById(id);
+let es = null;
+
+async function boot() {
+  const r = await fetch("/api/batches").then((x) => x.json());
+  $("mode").textContent = r.model_label || (r.mode === "azure-gpt4o" ? "GPT-4o" : "mock");
+  $("backend").textContent = r.ledger_backend;
+  $("batch").innerHTML = r.batches
+    .map((b) => `<option value="${b.batch_id}">${b.batch_id} — ${b.product}</option>`)
+    .join("");
+}
+
+function reset() {
+  $("steps").innerHTML = "";
+  $("scoreVal").textContent = "…";
+  $("route").innerHTML = "";
+  $("actions").innerHTML = "";
+  $("alert").style.display = "none";
+  $("ledger").innerHTML = "";
+  const b = $("band"); b.textContent = "ANALIZANDO"; b.style.background = "var(--panel-2)"; b.style.color = "var(--muted)";
+}
+
+function addStepStart(n, title) {
+  const d = document.createElement("div");
+  d.className = "step"; d.id = "step" + n;
+  d.innerHTML = `<div class="ico spin">⏳</div><div><div class="t">${title}</div><div class="r">Procesando…</div></div>`;
+  $("steps").appendChild(d);
+}
+
+function fillStep(e) {
+  const d = $("step" + e.n); if (!d) return;
+  d.className = "step sev-" + e.severity;
+  const evHtml = (e.evidence || []).map((x) => `<code>${x}</code>`).join("");
+  d.innerHTML =
+    `<div class="ico">${ICONS[e.n] || "•"}</div>
+     <div><div class="t">${d.querySelector(".t")?.textContent || ""}</div>
+     <div class="r">${e.reasoning || ""}</div>
+     ${evHtml ? `<div class="ev">${evHtml}</div>` : ""}</div>`;
+  if (e.route) renderRoute(e.route);
+  if (e.report) renderReport(e.report);
+  if (e.alert) renderAlert(e.alert);
+}
+
+function renderRoute(route) {
+  $("route").innerHTML = route
+    .map((r) => `<li><b>${r.location}</b> · ${r.event} · <span>${r.timestamp.slice(5, 16).replace("T", " ")}</span></li>`)
+    .join("");
+}
+
+function renderReport(rep) {
+  const s = rep.risk_score;
+  animateScore(s);
+  const b = $("band"); b.textContent = rep.risk_band;
+  const col = BAND_COLOR[rep.risk_band] || "#8a99ad";
+  b.style.background = col + "22"; b.style.color = col;
+  $("meter").style.width = s + "%"; $("meter").style.background = col;
+  $("actions").innerHTML = rep.recommended_actions.map((a) => `<li>${a}</li>`).join("");
+  $("ledger").innerHTML = rep.ledger_integrity
+    ? `<span class="ok">✔ Ledger íntegro</span> · backend <b style="color:var(--teal)">${rep.ledger_backend}</b>`
+    : `<span style="color:var(--crit)">✖ Integridad comprometida</span>`;
+}
+
+function renderAlert(a) {
+  const box = $("alert"); box.style.display = "block";
+  box.innerHTML = `${a.sent ? "📤" : "📋"} ${a.message}`;
+}
+
+function animateScore(target) {
+  let cur = 0; const el = $("scoreVal");
+  const step = Math.max(1, Math.round(target / 28));
+  const t = setInterval(() => { cur = Math.min(target, cur + step); el.textContent = cur; if (cur >= target) clearInterval(t); }, 22);
+}
+
+function runAnalysis() {
+  if (es) es.close();
+  reset();
+  $("run").disabled = true;
+  const batch = $("batch").value;
+  es = new EventSource("/api/analyze?batch=" + encodeURIComponent(batch));
+  es.onmessage = (m) => {
+    const e = JSON.parse(m.data);
+    if (e.kind === "step_start") addStepStart(e.n, e.title);
+    else if (e.kind === "step_result") fillStep(e);
+    else if (e.kind === "error") { $("steps").innerHTML = `<div class="empty" style="color:var(--crit)">${e.message}</div>`; }
+    else if (e.kind === "run_complete") { es.close(); $("run").disabled = false; }
+  };
+  es.onerror = () => { es.close(); $("run").disabled = false; };
+}
+
+$("run").addEventListener("click", runAnalysis);
+boot();
+</script>
+</body>
+</html>
