@@ -125,6 +125,8 @@
         <div class="meter"><i id="meter" style="background:var(--muted)"></i></div>
         <div class="ledgerline" id="ledger"></div>
         <div class="ledgerline" id="hedera"></div>
+        <button id="verifyBtn" class="pdfbtn" style="display:none;cursor:pointer;width:100%">⛓ Verify on-chain</button>
+        <div class="ledgerline" id="verifyResult"></div>
         <a id="pdf" class="pdfbtn" style="display:none" target="_blank" rel="noopener">📄 Download compliance report (PDF)</a>
       </section>
 
@@ -147,6 +149,7 @@ const ICONS = { 1: "🔎", 2: "🏭", 3: "🗺️", 4: "📊", 5: "📣" };
 const BAND_COLOR = { "CRITICAL": "#f0506e", "HIGH": "#f5a623", "MODERATE": "#5b8def", "LOW": "#34d399" };
 const $ = (id) => document.getElementById(id);
 let es = null;
+let currentBatch = null;
 
 async function boot() {
   const r = await fetch("/api/batches").then((x) => x.json());
@@ -165,6 +168,8 @@ function reset() {
   $("alert").style.display = "none";
   $("ledger").innerHTML = "";
   $("hedera").innerHTML = "";
+  $("verifyBtn").style.display = "none";
+  $("verifyResult").innerHTML = "";
   $("pdf").style.display = "none";
   const b = $("band"); b.textContent = "ANALYZING"; b.style.background = "var(--panel-2)"; b.style.color = "var(--muted)";
 }
@@ -211,9 +216,30 @@ function renderReport(rep) {
   if (h && h.anchored) {
     $("hedera").innerHTML =
       `<span class="ok">⛓ Anchored on Hedera</span> · topic <b>${h.topic_id}</b> · seq #${h.sequence_number} · ` +
-      `<a href="${h.hashscan_url}" target="_blank" rel="noopener" style="color:var(--teal)">verify on HashScan ↗</a>`;
+      `<a href="${h.hashscan_url}" target="_blank" rel="noopener" style="color:var(--teal)">HashScan ↗</a>`;
+    $("verifyBtn").style.display = "block";
   } else {
     $("hedera").innerHTML = "";
+  }
+}
+
+async function verifyOnChain() {
+  const r = $("verifyResult");
+  r.innerHTML = "⏳ Querying Hedera public mirror node…";
+  try {
+    const res = await fetch("/api/verify?batch=" + encodeURIComponent(currentBatch)).then((x) => x.json());
+    if (res.verified) {
+      const when = res.consensus_timestamp
+        ? new Date(parseFloat(res.consensus_timestamp) * 1000).toUTCString()
+        : "";
+      r.innerHTML =
+        `<span class="ok">✔ VERIFIED on-chain</span> · seq #${res.sequence_number} · ` +
+        `<code style="font-size:11px">${(res.sha256 || "").slice(0, 16)}…</code><br><span style="font-size:11px">consensus ${when}</span>`;
+    } else {
+      r.innerHTML = `<span style="color:var(--warn)">⌛ ${res.reason || "not found yet"} — try again in a few seconds</span>`;
+    }
+  } catch (e) {
+    r.innerHTML = `<span style="color:var(--crit)">verification error</span>`;
   }
 }
 
@@ -233,6 +259,7 @@ function runAnalysis() {
   reset();
   $("run").disabled = true;
   const batch = $("batch").value;
+  currentBatch = batch;
   es = new EventSource("/api/analyze?batch=" + encodeURIComponent(batch));
   es.onmessage = (m) => {
     const e = JSON.parse(m.data);
@@ -250,6 +277,7 @@ function runAnalysis() {
 }
 
 $("run").addEventListener("click", runAnalysis);
+$("verifyBtn").addEventListener("click", verifyOnChain);
 boot();
 </script>
 </body>

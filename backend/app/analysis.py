@@ -149,6 +149,32 @@ def score_band(score: int) -> str:
     return "LOW"
 
 
+def canonical_report(batch_id: str, store: DataStore) -> dict[str, Any]:
+    """Deterministic subset of the report used for the on-chain fingerprint.
+    Excludes the LLM narrative (non-deterministic) so re-deriving the hash
+    later yields the exact same value — that is what makes verification work."""
+    bid = batch_id.strip().upper()
+    records = store.ledger.events_for(bid)
+    findings = [
+        f for f in (
+            detect_duplicate_location(records),
+            assess_origin_supplier(records, store),
+            evaluate_distribution_pattern(records, store),
+        ) if f
+    ]
+    score = min(100, sum(f.points for f in findings))
+    return {
+        "batch_id": bid,
+        "risk_score": score,
+        "risk_band": score_band(score),
+        "findings": [
+            {"severity": f.severity, "points": f.points, "title": f.title, "detail": f.detail}
+            for f in findings
+        ],
+        "recommended_actions": recommended_actions(score, findings),
+    }
+
+
 def recommended_actions(score: int, findings: list[Finding]) -> list[str]:
     if score >= 75:
         return [

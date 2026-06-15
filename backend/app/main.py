@@ -68,6 +68,21 @@ def report(batch: str) -> Response:
     )
 
 
+@app.get("/api/verify")
+def verify(batch: str) -> dict:
+    """Independently verify the batch's risk fingerprint against Hedera's public
+    mirror node. Recomputes the deterministic hash and looks for it on-chain."""
+    if not hasattr(store.ledger, "anchor"):
+        raise HTTPException(status_code=400, detail="Hedera ledger not active")
+    from . import analysis, hedera_ledger
+
+    canon = analysis.canonical_report(batch, store)
+    fingerprint = hedera_ledger.canonical_sha256(canon)
+    return hedera_ledger.verify_fingerprint(
+        store.ledger.topic_id, store.ledger.network, fingerprint
+    )
+
+
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")

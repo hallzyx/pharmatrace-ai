@@ -18,9 +18,11 @@ keeps working.
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import os
+import urllib.request
 from typing import Any
 
 from .ledger import LocalHashChainLedger
@@ -32,6 +34,46 @@ def available() -> bool:
 
 def _network() -> str:
     return os.getenv("HEDERA_NETWORK", "testnet")
+
+
+def canonical_sha256(payload: dict[str, Any]) -> str:
+    """The single hashing function used both when anchoring and when verifying,
+    so the values are guaranteed to match."""
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+
+
+def verify_fingerprint(topic_id: str, network: str, sha256_hex: str) -> dict[str, Any]:
+    """Read the public Hedera mirror node and check whether a record carrying
+    this exact fingerprint exists on the topic. No auth, no SDK — anyone can
+    run this independently."""
+    url = (
+        f"https://{network}.mirrornode.hedera.com/api/v1/topics/{topic_id}"
+        f"/messages?limit=100&order=desc"
+    )
+    try:
+        with urllib.request.urlopen(url, timeout=8) as resp:  # noqa: S310 (public mirror)
+            data = json.load(resp)
+    except Exception as exc:
+        return {"verified": False, "reason": f"mirror node unreachable: {exc}", "sha256": sha256_hex}
+
+    for msg in data.get("messages", []):
+        try:
+            payload = json.loads(base64.b64decode(msg["message"]))
+        except Exception:
+            continue
+        if payload.get("sha256") == sha256_hex:
+            return {
+                "verified": True,
+                "sha256": sha256_hex,
+                "sequence_number": msg.get("sequence_number"),
+                "consensus_timestamp": msg.get("consensus_timestamp"),
+                "topic_id": topic_id,
+                "network": network,
+                "hashscan_url": f"https://hashscan.io/{network}/topic/{topic_id}",
+            }
+    return {"verified": False, "reason": "no matching record on-chain yet", "sha256": sha256_hex}
 
 
 class HederaLedger(LocalHashChainLedger):
@@ -96,9 +138,7 @@ class HederaLedger(LocalHashChainLedger):
         """Submit a compact, signed notarization to the HCS topic. Returns proof
         metadata (sequence number, running hash, HashScan link). Never raises —
         degrades to a local-only result so the demo cannot break."""
-        payload_hash = hashlib.sha256(
-            json.dumps(payload, sort_keys=True).encode("utf-8")
-        ).hexdigest()
+        payload_hash = canonical_sha256(payload)
         message = json.dumps(
             {"app": "PharmaTrace", "ref": reference, "sha256": payload_hash}
         )
