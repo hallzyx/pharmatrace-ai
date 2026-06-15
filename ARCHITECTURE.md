@@ -16,7 +16,7 @@ FastAPI (app/main.py)
    ▼
 Reasoning Agent (app/agent.py)  ── streams 5 steps ──►
    ├─ Deterministic analysis ....... app/analysis.py   (risk score = code, not LLM)
-   ├─ LLM narration ................ app/llm.py        (Azure GPT-4o ▸ mock fallback)
+   ├─ LLM narration ................ app/llm.py        (Foundry SDK ▸ Azure key ▸ mock)
    ├─ Audit ledger ................. app/ledger.py / app/hedera_ledger.py
    ├─ Teams alert (Work IQ) ........ app/notify.py     (webhook ▸ simulated fallback)
    └─ Compliance PDF ............... app/report.py
@@ -27,7 +27,7 @@ Reasoning Agent (app/agent.py)  ── streams 5 steps ──►
 | Layer | Role | Where |
 |-------|------|-------|
 | **Fabric IQ** | Data: batches, suppliers, ledger events | `app/data.py`, `data/*.json` (lakehouse-shaped) |
-| **Foundry IQ** | The reasoning agent (GPT-4o) | `app/agent.py`, `app/llm.py` |
+| **Foundry IQ** | The reasoning agent. The model runs on a **Microsoft Foundry project**, reached via the `azure-ai-projects` SDK with **Entra ID** auth (`DefaultAzureCredential`); falls back to a direct Azure OpenAI key, then mock. | `app/agent.py`, `app/llm.py` |
 | **Work IQ** | Teams Adaptive Card alerts | `app/notify.py` |
 
 Plus **Hedera Consensus Service** as a public, tamper-proof anchor for every verdict.

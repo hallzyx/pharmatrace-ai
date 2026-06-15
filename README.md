@@ -82,7 +82,7 @@ Same agent, different batches, different evidence → different scores. Nothing 
 
 | Capability | Status | Notes |
 |------------|--------|-------|
-| Multi-step reasoning agent (streamed) | ✅ | Azure GPT-4o narration ▸ deterministic mock fallback |
+| Multi-step reasoning agent (streamed) | ✅ | Runs on a **Microsoft Foundry project** (azure-ai-projects SDK + Entra ID) ▸ Azure OpenAI key ▸ mock |
 | Deterministic risk scoring | ✅ | Computed in code — reproducible, defensible |
 | Tamper-evident audit ledger | ✅ | Hash-chained; Hedera HCS backend when configured |
 | Hedera HCS anchoring + access control | ✅ | `submit_key` restricts writes to your account |

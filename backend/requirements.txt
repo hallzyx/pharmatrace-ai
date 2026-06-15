@@ -2,7 +2,9 @@ fastapi==0.115.6
 uvicorn[standard]==0.34.0
 # PDF compliance report:
 reportlab==4.2.5
-# Optional — only needed when running with real Azure OpenAI / GPT-4o:
+# Optional — Microsoft Foundry project (preferred) + Azure OpenAI fallback:
+azure-ai-projects==2.2.0
+azure-identity==1.25.3
 openai==1.59.6
 # Optional — only needed to anchor the ledger on Hedera HCS:
 hiero-sdk-python==0.2.7
