@@ -48,7 +48,7 @@ def mode() -> str:
 def model_label() -> str:
     """Human-friendly label for the active path (shown in the UI badge)."""
     deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT", "azure")
-    if _foundry_available():
+    if _foundry_available() and not _foundry_disabled:
         return f"{deployment} · Foundry"
     if _azure_available():
         return deployment
