@@ -129,6 +129,18 @@ def run(batch_id: str, store: DataStore, *, pace: float = 0.45) -> Iterator[dict
     yield _ev("run_complete", report=report)
 
 
+def analyze(batch_id: str, store: DataStore) -> dict[str, Any] | None:
+    """Run the full pipeline and return only the final report (no streaming).
+    Used by the PDF compliance report endpoint."""
+    report = None
+    for event in run(batch_id, store, pace=0):
+        if event["kind"] == "run_complete":
+            report = event["report"]
+        elif event["kind"] == "error":
+            return None
+    return report
+
+
 def _finding_dict(f: analysis.Finding | None) -> dict[str, Any] | None:
     if not f:
         return None

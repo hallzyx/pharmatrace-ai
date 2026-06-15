@@ -6,8 +6,8 @@ import json
 from pathlib import Path
 from typing import Iterator
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse, Response, StreamingResponse
 
 from . import agent, llm
 from .data import DataStore
@@ -42,6 +42,29 @@ def analyze(batch: str) -> StreamingResponse:
         event_stream(),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+@app.get("/api/report")
+def report(batch: str) -> Response:
+    result = agent.analyze(batch, store)
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Batch {batch} not found")
+    try:
+        from . import report as report_mod
+
+        head = getattr(store.ledger, "head", "")
+        pdf = report_mod.build_compliance_pdf(result, ledger_head=head)
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="PDF reports require reportlab (pip install reportlab).",
+        )
+    filename = f"PharmaTrace_{result['batch_id']}_compliance.pdf"
+    return Response(
+        content=pdf,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 

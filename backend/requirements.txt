@@ -1,4 +1,6 @@
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
+# PDF compliance report:
+reportlab==4.2.5
 # Optional — only needed when running with real Azure OpenAI / GPT-4o:
 openai==1.59.6

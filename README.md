@@ -21,7 +21,7 @@ alerts the quality team — producing an audit-ready compliance trail (DSCSA / F
 | 1. **Verify authenticity** | Cross-checks serial + lot against the immutable ledger; detects the same unit "received" in two distant places at once (cloning) | Fabric IQ (data) |
 | 2. **Analyze origin supplier** | Checks FDA/EMA certification and regulatory blacklists | Foundry IQ (agent) |
 | 3. **Evaluate distribution pattern** | Flags rapid hand-offs and impossible geographic routes | Foundry IQ (agent) |
-| 4. **Generate risk report** | Deterministic risk score + recommended regulatory actions | Foundry IQ (agent) |
+| 4. **Generate risk report** | Deterministic risk score + recommended actions + downloadable **audit-ready PDF** (DSCSA/FMD) | Foundry IQ (agent) |
 | 5. **Alert stakeholders** | Pushes an Adaptive Card alert to the Teams quality channel | Work IQ (M365) |
 
 The reasoning is **streamed live** to the UI, step by step, with cited evidence —
@@ -112,4 +112,4 @@ The header badges in the UI show which mode is active (`GPT-4o` vs `mock`, ledge
 - Back the dataset with a real **Microsoft Fabric** lakehouse.
 - Replace the single-page UI with the planned **Next.js / TypeScript** frontend.
 - Persist the ledger and add GS1 serialized-barcode ingestion.
-- Generate the signed **PDF compliance report** for regulatory submission.
+- Cryptographically sign the PDF compliance report for regulatory submission.
