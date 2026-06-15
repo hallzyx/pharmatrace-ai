@@ -1,6 +1,9 @@
 {
   "products": {
     "MX-2026-4471": "Semaglutide 1mg (Ozempic-equivalent)",
+    "NG-2026-7788": "Tirzepatide 5mg (Mounjaro-equivalent)",
+    "BR-2026-5500": "Adalimumab 40mg (Humira-equivalent)",
+    "IN-2026-3030": "Oseltamivir 75mg",
     "US-2026-1102": "Atorvastatin 20mg",
     "EU-2026-8830": "Insulin Glargine 100U/mL"
   },
@@ -54,6 +57,96 @@
       "geo": [20.66, -103.35],
       "event": "RECEIVE",
       "timestamp": "2026-06-14T03:10:00Z"
+    },
+    {
+      "batch_id": "NG-2026-7788",
+      "product": "Tirzepatide 5mg (Mounjaro-equivalent)",
+      "serial": "01055500000002-21-7788",
+      "supplier_id": "SUP-CN-7788",
+      "location": "Shenzhen, China",
+      "geo": [22.54, 114.06],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-13T01:00:00Z"
+    },
+    {
+      "batch_id": "NG-2026-7788",
+      "product": "Tirzepatide 5mg (Mounjaro-equivalent)",
+      "serial": "01055500000002-21-7788",
+      "supplier_id": "SUP-US-0214",
+      "location": "Newark, USA",
+      "geo": [40.73, -74.17],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-13T19:00:00Z"
+    },
+    {
+      "batch_id": "NG-2026-7788",
+      "product": "Tirzepatide 5mg (Mounjaro-equivalent)",
+      "serial": "01055500000002-21-7788",
+      "supplier_id": "SUP-US-0214",
+      "location": "Los Angeles, USA",
+      "geo": [34.05, -118.24],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-13T23:00:00Z"
+    },
+    {
+      "batch_id": "BR-2026-5500",
+      "product": "Adalimumab 40mg (Humira-equivalent)",
+      "serial": "01066600000003-21-5500",
+      "supplier_id": "SUP-US-0214",
+      "location": "Newark, USA",
+      "geo": [40.73, -74.17],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-12T08:00:00Z"
+    },
+    {
+      "batch_id": "BR-2026-5500",
+      "product": "Adalimumab 40mg (Humira-equivalent)",
+      "serial": "01066600000003-21-5500",
+      "supplier_id": "SUP-US-0214",
+      "location": "Chicago, USA",
+      "geo": [41.88, -87.63],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-12T18:00:00Z"
+    },
+    {
+      "batch_id": "BR-2026-5500",
+      "product": "Adalimumab 40mg (Humira-equivalent)",
+      "serial": "01066600000003-21-5500",
+      "supplier_id": "SUP-US-0214",
+      "location": "Los Angeles, USA",
+      "geo": [34.05, -118.24],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-13T00:00:00Z"
+    },
+    {
+      "batch_id": "IN-2026-3030",
+      "product": "Oseltamivir 75mg",
+      "serial": "01044400000004-21-3030",
+      "supplier_id": "SUP-IN-4400",
+      "location": "Mumbai, India",
+      "geo": [19.07, 72.87],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-10T06:00:00Z"
+    },
+    {
+      "batch_id": "IN-2026-3030",
+      "product": "Oseltamivir 75mg",
+      "serial": "01044400000004-21-3030",
+      "supplier_id": "SUP-EU-0091",
+      "location": "Frankfurt, Germany",
+      "geo": [50.11, 8.68],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-11T12:00:00Z"
+    },
+    {
+      "batch_id": "IN-2026-3030",
+      "product": "Oseltamivir 75mg",
+      "serial": "01044400000004-21-3030",
+      "supplier_id": "SUP-US-0214",
+      "location": "Newark, USA",
+      "geo": [40.73, -74.17],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-14T06:00:00Z"
     },
     {
       "batch_id": "US-2026-1102",

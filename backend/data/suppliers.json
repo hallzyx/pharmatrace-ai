@@ -40,6 +40,16 @@
       "gdp_license": "MX/COFEPRIS/2025/3300",
       "blacklisted": false,
       "risk_notes": "Certified locally but no EU/US recognition for re-export."
+    },
+    {
+      "id": "SUP-IN-4400",
+      "name": "Sunrise Generics Trading Pvt. Ltd.",
+      "country": "India",
+      "region": "APAC",
+      "certified_by": [],
+      "gdp_license": null,
+      "blacklisted": false,
+      "risk_notes": "Grey-market wholesaler; no verifiable FDA/EMA certification on file."
     }
   ]
 }
