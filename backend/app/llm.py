@@ -57,14 +57,18 @@ def model_label() -> str:
 
 # --- narration ----------------------------------------------------------------
 
+_foundry_disabled = False  # set after the first Foundry failure (e.g. no `az login`)
+
+
 def narrate(instruction: str, evidence: list[str]) -> str:
     """Produce one reasoning sentence for the current step, via the best
     available backend, degrading gracefully."""
-    if _foundry_available():
+    global _foundry_disabled
+    if _foundry_available() and not _foundry_disabled:
         try:
             return _foundry_narrate(instruction, evidence)
-        except Exception:  # HACK: fall through to key/mock — never break the demo
-            pass
+        except Exception:  # HACK: disable Foundry for the session, fall through
+            _foundry_disabled = True  # don't retry slow auth on every step
     if _azure_available():
         try:
             return _azure_narrate(instruction, evidence)
