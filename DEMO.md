@@ -38,6 +38,7 @@ After the critical batch, analyze a clean one:
 
 - "Risk score is deterministic; the AI explains the findings, it doesn't invent them."
 - "Sealed on a public consensus network — immutable, timestamped, and only our account could have written it."
+- "And not just any chain — Hedera is aBFT, with mathematically final consensus, governed by a council of enterprises like Google, IBM and Boeing. The audit trail lives on neutral infrastructure, not on us."
 - "If one data point were altered, the fingerprint wouldn't match and it would say TAMPERED."
 
 ## Gotchas (read before recording)

@@ -108,6 +108,26 @@ holding that key can write records. Reads stay public via mirror nodes — that 
 makes the immutability independently verifiable. (Confidential payloads would require
 encryption; out of scope here — we anchor only a hash + reference, never sensitive data.)
 
+### Why Hedera — not just any chain
+
+The choice of network matters for a compliance system. Hedera is enterprise-credible, not
+a hobby chain:
+
+- **It isn't a blockchain — it's Hashgraph.** Consensus runs on a DAG-based gossip protocol,
+  not chained blocks, giving high throughput and fast finality.
+- **aBFT — the strongest security class.** *Asynchronous Byzantine Fault Tolerant*: consensus
+  is mathematically guaranteed even with malicious nodes and unbounded network delay. Most
+  chains offer only probabilistic finality.
+- **Governed by a council, not a foundation or a whale.** Up to **39 term-limited members**
+  with equal votes — no single entity can control the network. Members have included Google,
+  IBM, Boeing, Deutsche Telekom, LG and IIT Madras.
+- **Fast, final, and cheap.** ~3–5s finality with fixed, fractions-of-a-cent fees —
+  predictable for regulated, high-volume use.
+
+For pharmaceutical compliance, that matters: the audit trail lives on **neutral,
+enterprise-governed infrastructure with mathematically final consensus** — not on a server
+we control, and not on a chain whose finality is merely probable.
+
 ## On-chain verification (the important part)
 
 The challenge: a report contains the LLM's narrative, which differs every run. Hashing
