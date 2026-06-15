@@ -15,7 +15,29 @@ demo-safe mode (mock narration, local ledger, simulated alerts).
 
 ---
 
-## Foundry IQ — Azure OpenAI (GPT-4o)
+## Foundry IQ — the reasoning model
+
+Two ways to provide the model. The app prefers **Foundry project (Entra ID)** and falls
+back to the **Azure OpenAI key** if the project endpoint is absent or unreachable.
+
+### Preferred — Microsoft Foundry project (Entra ID)
+
+```ini
+AZURE_AI_PROJECT_ENDPOINT=https://YOUR-RESOURCE.services.ai.azure.com/api/projects/YOUR-PROJECT
+AZURE_OPENAI_DEPLOYMENT=gpt-4o
+```
+
+This uses the `azure-ai-projects` SDK with `DefaultAzureCredential` — **no API key**.
+You must be signed in: `az login` (the running process inherits that session). Your
+account needs an **Azure AI User / Developer** role on the project.
+
+The project endpoint is the `…services.ai.azure.com/api/projects/<project>` URL — find it
+on the Foundry project **Overview** page, or via:
+`az cognitiveservices account show --name <resource> --query properties.endpoints`.
+
+When active, the UI badge reads `gpt-4.1-mini · Foundry`.
+
+### Fallback — Azure OpenAI key
 
 ```ini
 AZURE_OPENAI_ENDPOINT=https://YOUR-RESOURCE.openai.azure.com/
@@ -24,13 +46,9 @@ AZURE_OPENAI_DEPLOYMENT=gpt-4o
 AZURE_OPENAI_API_VERSION=2024-08-01-preview
 ```
 
-| Field | Where to find it |
-|-------|------------------|
-| `AZURE_OPENAI_DEPLOYMENT` | The **deployment name** you gave the model — **not** the project/resource name |
-
 > ⚠️ **Most common error.** `DeploymentNotFound (404)` means `AZURE_OPENAI_DEPLOYMENT`
-> is wrong. In Azure AI Foundry, the *project* and the *model deployment* are different
-> things. Open **Deployments / Models + endpoints** and copy the deployment's exact name
+> is wrong. The *project* and the *model deployment* are different things in Foundry.
+> Open **Deployments / Models + endpoints** and copy the deployment's exact name
 > (e.g. `gpt-4o`, `gpt-4.1-mini`). If there's no deployment yet, deploy a model first.
 
 Verify: `python check_azure.py` → expects `[OK] GPT-4o response:`.
@@ -87,7 +105,7 @@ Verify on-chain from the UI after an analysis — see [ARCHITECTURE.md](ARCHITEC
 
 | Badge | Active | Fallback |
 |-------|--------|----------|
-| `gpt-4.1-mini` / model name | Azure GPT-4o connected | `mock` = templated narration |
+| `model · Foundry` | Foundry project (Entra ID) | `model` alone = key fallback; `mock` = templated |
 | `hedera-hcs · 0.0.xxxx` | Hedera anchoring on | `local-hashchain` = local ledger only |
 | `Teams` | (always shown) | alert is simulated unless webhook set |
 
@@ -99,6 +117,7 @@ Verify on-chain from the UI after an analysis — see [ARCHITECTURE.md](ARCHITEC
 
 | Package | Enables | Without it |
 |---------|---------|-----------|
-| `openai` | Azure GPT-4o narration | mock narration |
+| `azure-ai-projects` + `azure-identity` | Foundry project narration (Entra ID) | falls back to key |
+| `openai` | Azure OpenAI key narration | mock narration |
 | `hiero-sdk-python` | Hedera anchoring + verify | local ledger |
 | `reportlab` | Compliance PDF | `/api/report` returns 503 |
