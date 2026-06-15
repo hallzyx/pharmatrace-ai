@@ -44,7 +44,15 @@ Open **http://127.0.0.1:8077**, pick batch **`MX-2026-4471`**, click **Analizar 
 You'll see the agent reason through 5 steps and land on **Risk score 94/100 — CRÍTICO**,
 with a live Teams alert (simulated) and an audit-ready action list.
 
-> Try `US-2026-1102` or `EU-2026-8830` for clean (low-risk) batches to contrast.
+**Try other batches to see the agent discriminate** (the score is reasoned, not fixed):
+
+| Batch | Anomalies | Risk |
+|-------|-----------|------|
+| `MX-2026-4471` | clone + blacklisted supplier + illicit route | **94 — CRÍTICO** |
+| `NG-2026-7788` | clone + blacklisted supplier | **80 — CRÍTICO** |
+| `BR-2026-5500` | clone only (certified supplier) | **45 — ALTO** |
+| `IN-2026-3030` | grey-market supplier + intercontinental route | **28 — MODERADO** |
+| `US-2026-1102`, `EU-2026-8830` | none | **0 — BAJO** |
 
 ---
 
