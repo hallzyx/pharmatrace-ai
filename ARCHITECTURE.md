@@ -89,6 +89,7 @@ Rules that make this safe:
 | **LLM explains confirmed findings, never re-derives them** | Early versions made GPT hedge ("I can't confirm…"). We hand it the verified finding and tell it to state it firmly. |
 | **Everything degrades gracefully** | No Azure key → templated narration. No Teams webhook → simulated alert. No Hedera creds → local ledger. The demo never shows a blank screen. |
 | **Ledger behind an interface** | `LedgerBackend` lets `LocalHashChainLedger` and `HederaLedger` swap with zero agent changes. |
+| **A *public* ledger, on purpose — not a private one** | A regulator or judge verifies each verdict on a public explorer (HashScan) with **no access to our systems and zero trust in us**. A private/permissioned ledger (e.g. a managed confidential ledger) would force the verifier to trust our infrastructure. Public, independent verifiability *is* the compliance differentiator — so we accept public reads and protect integrity with a `submit_key` instead. |
 
 ## The audit ledger
 
