@@ -36,7 +36,7 @@ Requires **Python 3.10+**. No API keys needed — it ships with a demo-safe mock
 ```bash
 cd backend
 python -m pip install -r requirements.txt
-python -m uvicorn app.main:app --port 8077
+python dev.py            # or: python -m uvicorn app.main:app --port 8077
 ```
 
 Open **http://127.0.0.1:8077**, pick batch **`MX-2026-4471`**, click **Analizar lote**.
