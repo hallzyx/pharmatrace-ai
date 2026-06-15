@@ -1,0 +1,45 @@
+{
+  "suppliers": [
+    {
+      "id": "SUP-EU-0091",
+      "name": "Nordpharm Distribution GmbH",
+      "country": "Germany",
+      "region": "EU",
+      "certified_by": ["EMA", "FDA"],
+      "gdp_license": "DE/GDP/2024/0091",
+      "blacklisted": false,
+      "risk_notes": "Tier-1 certified wholesaler, full GDP compliance."
+    },
+    {
+      "id": "SUP-US-0214",
+      "name": "Atlantic MedSupply Inc.",
+      "country": "United States",
+      "region": "US",
+      "certified_by": ["FDA"],
+      "gdp_license": "US/DSCSA/2023/0214",
+      "blacklisted": false,
+      "risk_notes": "DSCSA-registered authorized trading partner."
+    },
+    {
+      "id": "SUP-CN-7788",
+      "name": "Hongda Trade Logistics Ltd.",
+      "country": "China",
+      "region": "APAC",
+      "certified_by": [],
+      "gdp_license": null,
+      "blacklisted": true,
+      "blacklist_source": "FDA Import Alert 66-40",
+      "risk_notes": "Unlicensed re-packager flagged for diverted high-value biologics."
+    },
+    {
+      "id": "SUP-MX-3300",
+      "name": "Distribuidora Farmasol S.A. de C.V.",
+      "country": "Mexico",
+      "region": "LATAM",
+      "certified_by": ["COFEPRIS"],
+      "gdp_license": "MX/COFEPRIS/2025/3300",
+      "blacklisted": false,
+      "risk_notes": "Certified locally but no EU/US recognition for re-export."
+    }
+  ]
+}

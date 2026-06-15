@@ -1,0 +1,99 @@
+{
+  "products": {
+    "MX-2026-4471": "Semaglutide 1mg (Ozempic-equivalent)",
+    "US-2026-1102": "Atorvastatin 20mg",
+    "EU-2026-8830": "Insulin Glargine 100U/mL"
+  },
+  "ledger_events": [
+    {
+      "batch_id": "MX-2026-4471",
+      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "serial": "01034500000001-21-4471",
+      "supplier_id": "SUP-CN-7788",
+      "location": "Shenzhen, China",
+      "geo": [22.54, 114.06],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-12T03:10:00Z"
+    },
+    {
+      "batch_id": "MX-2026-4471",
+      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "serial": "01034500000001-21-4471",
+      "supplier_id": "SUP-MX-3300",
+      "location": "Mexico City, Mexico",
+      "geo": [19.43, -99.13],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-12T22:40:00Z"
+    },
+    {
+      "batch_id": "MX-2026-4471",
+      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "serial": "01034500000001-21-4471",
+      "supplier_id": "SUP-MX-3300",
+      "location": "Mexico City, Mexico",
+      "geo": [19.43, -99.13],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-13T15:05:00Z"
+    },
+    {
+      "batch_id": "MX-2026-4471",
+      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "serial": "01034500000001-21-4471",
+      "supplier_id": "SUP-EU-0091",
+      "location": "Madrid, Spain",
+      "geo": [40.41, -3.70],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-14T02:55:00Z"
+    },
+    {
+      "batch_id": "MX-2026-4471",
+      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "serial": "01034500000001-21-4471",
+      "supplier_id": "SUP-MX-3300",
+      "location": "Guadalajara, Mexico",
+      "geo": [20.66, -103.35],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-14T03:10:00Z"
+    },
+    {
+      "batch_id": "US-2026-1102",
+      "product": "Atorvastatin 20mg",
+      "serial": "01099999999999-21-1102",
+      "supplier_id": "SUP-US-0214",
+      "location": "Newark, USA",
+      "geo": [40.73, -74.17],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-10T14:00:00Z"
+    },
+    {
+      "batch_id": "US-2026-1102",
+      "product": "Atorvastatin 20mg",
+      "serial": "01099999999999-21-1102",
+      "supplier_id": "SUP-US-0214",
+      "location": "Chicago, USA",
+      "geo": [41.88, -87.63],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-11T09:30:00Z"
+    },
+    {
+      "batch_id": "EU-2026-8830",
+      "product": "Insulin Glargine 100U/mL",
+      "serial": "01077777777777-21-8830",
+      "supplier_id": "SUP-EU-0091",
+      "location": "Frankfurt, Germany",
+      "geo": [50.11, 8.68],
+      "event": "DISPATCH",
+      "timestamp": "2026-06-11T08:00:00Z"
+    },
+    {
+      "batch_id": "EU-2026-8830",
+      "product": "Insulin Glargine 100U/mL",
+      "serial": "01077777777777-21-8830",
+      "supplier_id": "SUP-EU-0091",
+      "location": "Lyon, France",
+      "geo": [45.76, 4.84],
+      "event": "RECEIVE",
+      "timestamp": "2026-06-11T19:20:00Z"
+    }
+  ]
+}
