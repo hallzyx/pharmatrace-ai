@@ -105,12 +105,15 @@ class HederaLedger(LocalHashChainLedger):
         if not self.client or not self.topic_id:
             return {"anchored": False, "reason": "hedera-not-connected", "sha256": payload_hash}
         try:
+            from hiero_sdk_python import TopicId
             from hiero_sdk_python.consensus.topic_message_submit_transaction import (
                 TopicMessageSubmitTransaction,
             )
 
+            # The SDK needs a TopicId object, not a string (which has no _to_proto).
+            topic = TopicId.from_string(self.topic_id)
             tx = (
-                TopicMessageSubmitTransaction(topic_id=self.topic_id, message=message)
+                TopicMessageSubmitTransaction(topic_id=topic, message=message)
                 .freeze_with(self.client)
                 .sign(self._operator_key)
             )
