@@ -26,6 +26,7 @@ def batches() -> dict:
         "mode": llm.mode(),
         "model_label": llm.model_label(),
         "ledger_backend": store.ledger.name,
+        "topic_id": getattr(store.ledger, "topic_id", ""),
         "batches": [
             {"batch_id": b, "product": store.products[b]} for b in store.known_batches()
         ],

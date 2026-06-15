@@ -162,7 +162,7 @@ let currentBatch = null;
 async function boot() {
   const r = await fetch("/api/batches").then((x) => x.json());
   $("mode").textContent = r.model_label || (r.mode === "azure-gpt4o" ? "GPT-4o" : "mock");
-  $("backend").textContent = r.ledger_backend;
+  $("backend").textContent = r.topic_id ? `${r.ledger_backend} · ${r.topic_id}` : r.ledger_backend;
   $("batch").innerHTML = r.batches
     .map((b) => `<option value="${b.batch_id}">${b.batch_id} — ${b.product}</option>`)
     .join("");
