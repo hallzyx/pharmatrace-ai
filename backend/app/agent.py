@@ -116,6 +116,10 @@ def run(batch_id: str, store: DataStore, *, pace: float = 0.45) -> Iterator[dict
         "recommended_actions": actions,
         "explanation": explanation,
     }
+    # Anchor the report on Hedera HCS for public, tamper-proof notarization
+    # (only when the Hedera backend is active; soft-fails otherwise).
+    if hasattr(store.ledger, "anchor"):
+        report["hedera"] = store.ledger.anchor(f"risk-report:{batch_id}", report)
     yield _ev("step_result", n=4, severity="critical" if score >= 75 else "warning" if score >= 40 else "info",
               reasoning=explanation, report=report)
 

@@ -165,6 +165,15 @@ def build_compliance_pdf(report: dict[str, Any], *, ledger_head: str = "") -> by
         + (f" · head {ledger_head[:24]}…" if ledger_head else ""),
         small,
     ))
+    hedera = report.get("hedera")
+    if hedera and hedera.get("anchored"):
+        story.append(Paragraph(
+            f"<b>Hedera Consensus Service:</b> anchored on topic {hedera['topic_id']} "
+            f"(seq #{hedera['sequence_number']}, {hedera['network']}) · "
+            f"publicly verifiable at hashscan.io. Write access restricted to the "
+            f"quality authority's account (submit key).",
+            small,
+        ))
     story.append(Paragraph(
         "This report is derived from a tamper-evident hash-chained ledger. "
         "Report integrity hash: " + rid, small,

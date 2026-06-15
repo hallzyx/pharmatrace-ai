@@ -124,6 +124,7 @@
         </div>
         <div class="meter"><i id="meter" style="background:var(--muted)"></i></div>
         <div class="ledgerline" id="ledger"></div>
+        <div class="ledgerline" id="hedera"></div>
         <a id="pdf" class="pdfbtn" style="display:none" target="_blank" rel="noopener">📄 Download compliance report (PDF)</a>
       </section>
 
@@ -163,6 +164,7 @@ function reset() {
   $("actions").innerHTML = "";
   $("alert").style.display = "none";
   $("ledger").innerHTML = "";
+  $("hedera").innerHTML = "";
   $("pdf").style.display = "none";
   const b = $("band"); b.textContent = "ANALYZING"; b.style.background = "var(--panel-2)"; b.style.color = "var(--muted)";
 }
@@ -205,6 +207,14 @@ function renderReport(rep) {
   $("ledger").innerHTML = rep.ledger_integrity
     ? `<span class="ok">✔ Ledger intact</span> · backend <b style="color:var(--teal)">${rep.ledger_backend}</b>`
     : `<span style="color:var(--crit)">✖ Integrity compromised</span>`;
+  const h = rep.hedera;
+  if (h && h.anchored) {
+    $("hedera").innerHTML =
+      `<span class="ok">⛓ Anchored on Hedera</span> · topic <b>${h.topic_id}</b> · seq #${h.sequence_number} · ` +
+      `<a href="${h.hashscan_url}" target="_blank" rel="noopener" style="color:var(--teal)">verify on HashScan ↗</a>`;
+  } else {
+    $("hedera").innerHTML = "";
+  }
 }
 
 function renderAlert(a) {

@@ -4,3 +4,5 @@ uvicorn[standard]==0.34.0
 reportlab==4.2.5
 # Optional — only needed when running with real Azure OpenAI / GPT-4o:
 openai==1.59.6
+# Optional — only needed to anchor the ledger on Hedera HCS:
+hiero-sdk-python==0.2.7
