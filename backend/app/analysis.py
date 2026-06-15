@@ -50,11 +50,11 @@ def detect_duplicate_location(records: list[LedgerRecord]) -> Finding | None:
                 return Finding(
                     severity="critical",
                     points=45,
-                    title="Lote clonado: misma unidad en dos lugares a la vez",
+                    title="Cloned batch: same unit in two places at once",
                     detail=(
-                        f"El serial fue 'recibido' en {a['location']} y {b['location']} "
-                        f"con sólo {gap_txt} de diferencia ({dist:.0f} km aparte). "
-                        "Una unidad física no puede estar en ambos lugares."
+                        f"The serial was 'received' in {a['location']} and {b['location']} "
+                        f"only {gap_txt} apart ({dist:.0f} km away). "
+                        "A physical unit cannot be in both places."
                     ),
                     evidence=[
                         f"{a['location']} @ {a['timestamp']} (hash {a['hash'][:12]}…)",
@@ -75,23 +75,23 @@ def assess_origin_supplier(records: list[LedgerRecord], store: DataStore) -> Fin
         return Finding(
             severity="critical",
             points=35,
-            title="Proveedor de origen en lista negra regulatoria",
+            title="Origin supplier on a regulatory blacklist",
             detail=(
-                f"{origin['name']} ({origin['country']}) figura en {origin.get('blacklist_source', 'lista negra')}. "
-                f"Sin certificación EMA/FDA ni licencia GDP."
+                f"{origin['name']} ({origin['country']}) is listed on {origin.get('blacklist_source', 'a blacklist')}. "
+                f"No EMA/FDA certification or GDP license."
             ),
             evidence=[
-                f"Origen: {origin['name']} — {origin.get('risk_notes', '')}",
-                f"Fuente: {origin.get('blacklist_source', 'N/D')}",
+                f"Origin: {origin['name']} — {origin.get('risk_notes', '')}",
+                f"Source: {origin.get('blacklist_source', 'N/A')}",
             ],
         )
     if not origin["certified_by"]:
         return Finding(
             severity="warning",
             points=20,
-            title="Proveedor de origen no certificado",
-            detail=f"{origin['name']} no tiene certificación EMA/FDA verificable.",
-            evidence=[f"Origen: {origin['name']} ({origin['country']})"],
+            title="Uncertified origin supplier",
+            detail=f"{origin['name']} has no verifiable EMA/FDA certification.",
+            evidence=[f"Origin: {origin['name']} ({origin['country']})"],
         )
     return None
 
@@ -117,12 +117,12 @@ def evaluate_distribution_pattern(records: list[LedgerRecord], store: DataStore)
         return Finding(
             severity="critical" if (fast_handoffs and cross_continent) else "warning",
             points=14 if (fast_handoffs and cross_continent) else 8,
-            title="Patrón de distribución consistente con diversión ilícita",
+            title="Distribution pattern consistent with illicit diversion",
             detail=(
-                f"{len(handoffs)} cambios de manos en {span_h:.0f}h sobre una ruta "
-                f"inusual: {route}."
+                f"{len(handoffs)} hand-offs in {span_h:.0f}h over an unusual "
+                f"route: {route}."
             ),
-            evidence=[f"Ruta: {route}", f"Custodios: {len(handoffs)} en {span_h:.0f}h"],
+            evidence=[f"Route: {route}", f"Custodians: {len(handoffs)} in {span_h:.0f}h"],
         )
     return None
 
@@ -141,26 +141,26 @@ def route_geo(records: list[LedgerRecord]) -> list[dict[str, Any]]:
 
 def score_band(score: int) -> str:
     if score >= 75:
-        return "CRÍTICO"
+        return "CRITICAL"
     if score >= 40:
-        return "ALTO"
+        return "HIGH"
     if score >= 15:
-        return "MODERADO"
-    return "BAJO"
+        return "MODERATE"
+    return "LOW"
 
 
 def recommended_actions(score: int, findings: list[Finding]) -> list[str]:
     if score >= 75:
         return [
-            "Retiro inmediato del lote de la cadena de distribución",
-            "Notificación a COFEPRIS / EMA / FDA en las próximas 24h",
-            "Cuarentena de todas las unidades con este serial",
-            "Apertura de investigación de falsificación (DSCSA §582)",
+            "Immediate recall of the batch from the distribution chain",
+            "Notify COFEPRIS / EMA / FDA within the next 24h",
+            "Quarantine every unit carrying this serial",
+            "Open a counterfeiting investigation (DSCSA §582)",
         ]
     if score >= 40:
         return [
-            "Bloqueo temporal del lote pendiente de verificación",
-            "Solicitud de documentación GDP al proveedor de origen",
-            "Escalamiento al responsable de calidad",
+            "Temporary hold on the batch pending verification",
+            "Request GDP documentation from the origin supplier",
+            "Escalate to the quality lead",
         ]
-    return ["Monitoreo continuo", "Registro en bitácora de auditoría"]
+    return ["Continuous monitoring", "Log in the audit trail"]

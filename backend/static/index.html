@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -103,14 +103,14 @@
 
   <div class="controls">
     <select id="batch"></select>
-    <button id="run">Analizar lote</button>
-    <div class="hint">Seleccioná un lote y mirá al agente razonar paso a paso contra el ledger inmutable.</div>
+    <button id="run">Analyze batch</button>
+    <div class="hint">Pick a batch and watch the agent reason step by step against the immutable ledger.</div>
   </div>
 
   <div class="grid">
     <section class="panel">
-      <h2>Razonamiento del agente</h2>
-      <div id="steps"><div class="empty">Esperando análisis…</div></div>
+      <h2>Agent reasoning</h2>
+      <div id="steps"><div class="empty">Waiting for analysis…</div></div>
     </section>
 
     <aside>
@@ -118,19 +118,19 @@
         <h2>Risk score</h2>
         <div class="gauge">
           <div class="score"><span id="scoreVal">—</span><small>/100</small></div>
-          <div class="band" id="band" style="background:var(--panel-2);color:var(--muted)">SIN ANALIZAR</div>
+          <div class="band" id="band" style="background:var(--panel-2);color:var(--muted)">NOT ANALYZED</div>
         </div>
         <div class="meter"><i id="meter" style="background:var(--muted)"></i></div>
         <div class="ledgerline" id="ledger"></div>
       </section>
 
       <section class="panel" style="margin-top:18px">
-        <h2>Ruta de distribución</h2>
+        <h2>Distribution route</h2>
         <ul class="route" id="route"><li class="empty" style="padding:0;color:var(--muted)">—</li></ul>
       </section>
 
       <section class="panel" style="margin-top:18px">
-        <h2>Acciones recomendadas</h2>
+        <h2>Recommended actions</h2>
         <ul class="actions" id="actions"><li class="empty" style="list-style:none;margin-left:-12px">—</li></ul>
         <div class="alertbox" id="alert" style="display:none"></div>
       </section>
@@ -140,7 +140,7 @@
 
 <script>
 const ICONS = { 1: "🔎", 2: "🏭", 3: "🗺️", 4: "📊", 5: "📣" };
-const BAND_COLOR = { "CRÍTICO": "#f0506e", "ALTO": "#f5a623", "MODERADO": "#5b8def", "BAJO": "#34d399" };
+const BAND_COLOR = { "CRITICAL": "#f0506e", "HIGH": "#f5a623", "MODERATE": "#5b8def", "LOW": "#34d399" };
 const $ = (id) => document.getElementById(id);
 let es = null;
 
@@ -160,13 +160,13 @@ function reset() {
   $("actions").innerHTML = "";
   $("alert").style.display = "none";
   $("ledger").innerHTML = "";
-  const b = $("band"); b.textContent = "ANALIZANDO"; b.style.background = "var(--panel-2)"; b.style.color = "var(--muted)";
+  const b = $("band"); b.textContent = "ANALYZING"; b.style.background = "var(--panel-2)"; b.style.color = "var(--muted)";
 }
 
 function addStepStart(n, title) {
   const d = document.createElement("div");
   d.className = "step"; d.id = "step" + n;
-  d.innerHTML = `<div class="ico spin">⏳</div><div><div class="t">${title}</div><div class="r">Procesando…</div></div>`;
+  d.innerHTML = `<div class="ico spin">⏳</div><div><div class="t">${title}</div><div class="r">Processing…</div></div>`;
   $("steps").appendChild(d);
 }
 
@@ -199,8 +199,8 @@ function renderReport(rep) {
   $("meter").style.width = s + "%"; $("meter").style.background = col;
   $("actions").innerHTML = rep.recommended_actions.map((a) => `<li>${a}</li>`).join("");
   $("ledger").innerHTML = rep.ledger_integrity
-    ? `<span class="ok">✔ Ledger íntegro</span> · backend <b style="color:var(--teal)">${rep.ledger_backend}</b>`
-    : `<span style="color:var(--crit)">✖ Integridad comprometida</span>`;
+    ? `<span class="ok">✔ Ledger intact</span> · backend <b style="color:var(--teal)">${rep.ledger_backend}</b>`
+    : `<span style="color:var(--crit)">✖ Integrity compromised</span>`;
 }
 
 function renderAlert(a) {

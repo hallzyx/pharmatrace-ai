@@ -20,10 +20,10 @@ SAMPLE_REPORT = {
     "batch_id": "MX-2026-4471",
     "product": "Semaglutide 1mg (Ozempic-equivalent)",
     "risk_score": 94,
-    "risk_band": "CRÍTICO",
+    "risk_band": "CRITICAL",
     "explanation": (
-        "Lote clonado (misma unidad en Madrid y Guadalajara con 15 min de diferencia), "
-        "proveedor en lista negra FDA y patrón de distribución ilícito. Retiro inmediato recomendado."
+        "Cloned batch (same unit in Madrid and Guadalajara 15 min apart), "
+        "FDA-blacklisted supplier and illicit distribution pattern. Immediate recall recommended."
     ),
 }
 
@@ -31,23 +31,23 @@ SAMPLE_REPORT = {
 def main() -> None:
     print("=== PharmaTrace AI · Teams (Work IQ) webhook check ===\n")
     if not os.getenv("TEAMS_WEBHOOK_URL"):
-        print("[X] Falta TEAMS_WEBHOOK_URL en backend/.env")
-        print("    El demo usará alerta SIMULADA (igual funciona).")
+        print("[X] TEAMS_WEBHOOK_URL is missing in backend/.env")
+        print("    The demo will use a SIMULATED alert (still works).")
         return
 
-    print("[..] Enviando Adaptive Card de prueba al canal de Teams...\n")
+    print("[..] Sending a test Adaptive Card to the Teams channel...\n")
     result = notify.send_teams_alert(SAMPLE_REPORT)
     print("    sent   :", result["sent"])
     print("    channel:", result["channel"])
     print("    message:", result["message"])
     print()
     if result["sent"]:
-        print("[OK] POST aceptado. Revisá el canal de Teams: deberías ver una tarjeta")
-        print("     '⚠️ PharmaTrace AI — Riesgo CRÍTICO' con lote, score y explicación.")
-        print("\n     Si el POST fue aceptado pero NO ves la tarjeta (o llega vacía),")
-        print("     avisame: hay que ajustar el formato del payload a tu plantilla de Power Automate.")
+        print("[OK] POST accepted. Check the Teams channel: you should see a card")
+        print("     '⚠️ PharmaTrace AI — CRITICAL Risk' with batch, score and explanation.")
+        print("\n     If the POST was accepted but you do NOT see the card (or it arrives empty),")
+        print("     let me know: we need to match the payload to your Power Automate template.")
     else:
-        print("[X] No se pudo enviar. Revisá la URL del webhook en backend/.env")
+        print("[X] Could not send. Check the webhook URL in backend/.env")
 
 
 if __name__ == "__main__":

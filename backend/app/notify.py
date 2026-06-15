@@ -11,13 +11,13 @@ import os
 import urllib.request
 from typing import Any
 
-_COLOR = {"CRÍTICO": "attention", "ALTO": "warning", "MODERADO": "accent", "BAJO": "good"}
+_COLOR = {"CRITICAL": "attention", "HIGH": "warning", "MODERATE": "accent", "LOW": "good"}
 
 
 def _card(report: dict[str, Any]) -> dict[str, Any]:
     facts = [
-        {"title": "Lote", "value": report["batch_id"]},
-        {"title": "Producto", "value": report["product"]},
+        {"title": "Batch", "value": report["batch_id"]},
+        {"title": "Product", "value": report["product"]},
         {"title": "Risk score", "value": f"{report['risk_score']}/100 ({report['risk_band']})"},
     ]
     return {
@@ -30,7 +30,7 @@ def _card(report: dict[str, Any]) -> dict[str, Any]:
                 "body": [
                     {"type": "TextBlock", "size": "Large", "weight": "Bolder",
                      "color": _COLOR.get(report["risk_band"], "default"),
-                     "text": f"⚠️ PharmaTrace AI — Riesgo {report['risk_band']}"},
+                     "text": f"⚠️ PharmaTrace AI — {report['risk_band']} Risk"},
                     {"type": "FactSet", "facts": facts},
                     {"type": "TextBlock", "wrap": True, "text": report["explanation"]},
                 ],
@@ -46,7 +46,7 @@ def send_teams_alert(report: dict[str, Any]) -> dict[str, Any]:
         return {
             "sent": False,
             "channel": "simulated",
-            "message": f"[SIMULADO] Alerta de riesgo {report['risk_band']} encolada para el equipo de calidad (Teams).",
+            "message": f"[SIMULATED] {report['risk_band']} risk alert queued for the quality team (Teams).",
             "card": card,
         }
     try:
@@ -55,8 +55,8 @@ def send_teams_alert(report: dict[str, Any]) -> dict[str, Any]:
             headers={"Content-Type": "application/json"},
         )
         urllib.request.urlopen(req, timeout=6)  # noqa: S310 (trusted webhook URL)
-        return {"sent": True, "channel": "teams", "message": "Alerta enviada al canal de Teams del equipo de calidad."}
+        return {"sent": True, "channel": "teams", "message": "Alert sent to the quality team's Teams channel."}
     except Exception as exc:  # HACK: degrade gracefully so the demo never breaks
         return {"sent": False, "channel": "teams-error",
-                "message": f"[Fallback] No se pudo contactar Teams ({exc}). Alerta registrada localmente.",
+                "message": f"[Fallback] Could not reach Teams ({exc}). Alert logged locally.",
                 "card": card}

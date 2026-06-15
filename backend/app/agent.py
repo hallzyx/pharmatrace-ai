@@ -23,11 +23,11 @@ def _narrate(task: str, finding: "analysis.Finding | None", ok_msg: str) -> str:
     states it firmly instead of hedging."""
     if finding:
         instruction = (
-            f"{task} HALLAZGO CONFIRMADO por el sistema: «{finding.title}». "
-            f"{finding.detail} Explícalo en 1-2 frases con tono firme; NO lo pongas en duda."
+            f"{task} CONFIRMED FINDING from the system: «{finding.title}». "
+            f"{finding.detail} Explain it in 1-2 firm sentences; do NOT cast doubt on it."
         )
         return llm.narrate(instruction, finding.evidence)
-    return llm.narrate(f"{task} No se detectaron anomalías.", [ok_msg])
+    return llm.narrate(f"{task} No anomalies detected.", [ok_msg])
 
 
 def run(batch_id: str, store: DataStore, *, pace: float = 0.45) -> Iterator[dict[str, Any]]:
@@ -39,8 +39,8 @@ def run(batch_id: str, store: DataStore, *, pace: float = 0.45) -> Iterator[dict
     if not records:
         yield _ev(
             "error",
-            message=f"Lote {batch_id} no encontrado en el ledger. "
-            f"Conocidos: {', '.join(store.known_batches())}",
+            message=f"Batch {batch_id} not found in the ledger. "
+            f"Known: {', '.join(store.known_batches())}",
         )
         return
 
@@ -48,62 +48,62 @@ def run(batch_id: str, store: DataStore, *, pace: float = 0.45) -> Iterator[dict
     findings: list[analysis.Finding] = []
 
     # Step 1 — authenticity vs. the immutable ledger
-    yield _ev("step_start", n=1, title="Verificando autenticidad del lote")
+    yield _ev("step_start", n=1, title="Verifying batch authenticity")
     time.sleep(pace)
     dup = analysis.detect_duplicate_location(records)
     if dup:
         findings.append(dup)
     sev = dup.severity if dup else "info"
-    ev = dup.evidence if dup else [f"{len(records)} eventos en cadena, integridad OK"]
+    ev = dup.evidence if dup else [f"{len(records)} chained events, integrity OK"]
     reasoning = _narrate(
-        f"Verificación de autenticidad del lote {batch_id} ({product}) contra el ledger inmutable.",
+        f"Authenticity check of batch {batch_id} ({product}) against the immutable ledger.",
         dup,
-        f"{len(records)} eventos consistentes, sin duplicación de ubicación.",
+        f"{len(records)} consistent events, no location duplication.",
     )
     yield _ev("step_result", n=1, severity=sev, reasoning=reasoning,
               finding=_finding_dict(dup), evidence=ev)
 
     # Step 2 — origin supplier
-    yield _ev("step_start", n=2, title="Analizando proveedor de origen")
+    yield _ev("step_start", n=2, title="Analyzing origin supplier")
     time.sleep(pace)
     sup = analysis.assess_origin_supplier(records, store)
     if sup:
         findings.append(sup)
     reasoning = _narrate(
-        "Evaluación de la certificación regulatoria (FDA/EMA) del proveedor de origen.",
+        "Assessment of the origin supplier's regulatory certification (FDA/EMA).",
         sup,
-        "Proveedor de origen con certificación FDA/EMA vigente.",
+        "Origin supplier holds valid FDA/EMA certification.",
     )
     yield _ev("step_result", n=2, severity=sup.severity if sup else "info",
               reasoning=reasoning, finding=_finding_dict(sup),
-              evidence=sup.evidence if sup else ["Origen certificado"])
+              evidence=sup.evidence if sup else ["Certified origin"])
 
     # Step 3 — distribution pattern
-    yield _ev("step_start", n=3, title="Evaluando patrón de distribución")
+    yield _ev("step_start", n=3, title="Evaluating distribution pattern")
     time.sleep(pace)
     dist = analysis.evaluate_distribution_pattern(records, store)
     if dist:
         findings.append(dist)
     reasoning = _narrate(
-        "Evaluación de la ruta geográfica y la velocidad de los cambios de custodia.",
+        "Assessment of the geographic route and the speed of custody hand-offs.",
         dist,
-        "Ruta y velocidad de distribución dentro de parámetros normales.",
+        "Route and distribution speed within normal parameters.",
     )
     yield _ev("step_result", n=3, severity=dist.severity if dist else "info",
               reasoning=reasoning, finding=_finding_dict(dist),
-              evidence=dist.evidence if dist else ["Patrón normal"],
+              evidence=dist.evidence if dist else ["Normal pattern"],
               route=analysis.route_geo(records))
 
     # Step 4 — risk report
-    yield _ev("step_start", n=4, title="Generando reporte de riesgo")
+    yield _ev("step_start", n=4, title="Generating risk report")
     time.sleep(pace)
     score = min(100, sum(f.points for f in findings))
     band = analysis.score_band(score)
     actions = analysis.recommended_actions(score, findings)
     explanation = llm.narrate(
-        f"Sintetiza en 1-2 frases firmes el nivel de riesgo {band} (score {score}/100) "
-        f"del lote {batch_id}, integrando los hallazgos confirmados.",
-        [f"{f.title}: {f.detail}" for f in findings] or ["Sin hallazgos de riesgo"],
+        f"Summarize in 1-2 firm sentences the {band} risk level (score {score}/100) "
+        f"of batch {batch_id}, integrating the confirmed findings.",
+        [f"{f.title}: {f.detail}" for f in findings] or ["No risk findings"],
     )
     report = {
         "batch_id": batch_id,
@@ -120,7 +120,7 @@ def run(batch_id: str, store: DataStore, *, pace: float = 0.45) -> Iterator[dict
               reasoning=explanation, report=report)
 
     # Step 5 — alert stakeholders (Work IQ)
-    yield _ev("step_start", n=5, title="Alertando a stakeholders (Teams)")
+    yield _ev("step_start", n=5, title="Alerting stakeholders (Teams)")
     time.sleep(pace)
     alert = notify.send_teams_alert(report)
     yield _ev("step_result", n=5, severity="info",

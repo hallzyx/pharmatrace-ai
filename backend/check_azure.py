@@ -22,25 +22,25 @@ def main() -> None:
     required = ["AZURE_OPENAI_ENDPOINT", "AZURE_OPENAI_API_KEY", "AZURE_OPENAI_DEPLOYMENT"]
     missing = [k for k in required if not os.getenv(k)]
     if missing:
-        print("[X] Faltan variables (poné un .env en backend/ con):")
+        print("[X] Missing variables (add a .env in backend/ with):")
         for k in missing:
             print(f"   - {k}")
-        print("\nMode actual:", llm.mode(), "→ el demo usará narración mock (igual funciona).")
+        print("\nCurrent mode:", llm.mode(), "→ the demo will use mock narration (still works).")
         return
 
-    print("[OK] Variables presentes. Endpoint:", os.getenv("AZURE_OPENAI_ENDPOINT"))
+    print("[OK] Variables present. Endpoint:", os.getenv("AZURE_OPENAI_ENDPOINT"))
     print("  Deployment:", os.getenv("AZURE_OPENAI_DEPLOYMENT"))
-    print("\nProbando una llamada real a GPT-4o...\n")
+    print("\nTesting a real call to GPT-4o...\n")
     try:
         out = llm._azure_narrate(
-            "Confirma en una frase que el agente de cumplimiento está operativo.",
-            ["Lote de prueba MX-2026-4471", "Risk score 94/100"],
+            "Confirm in one sentence that the compliance agent is operational.",
+            ["Test batch MX-2026-4471", "Risk score 94/100"],
         )
-        print("[OK] Respuesta de GPT-4o:\n  ", out)
-        print("\n[OK] TODO OK — el demo correrá con razonamiento real (badge 'GPT-4o').")
+        print("[OK] GPT-4o response:\n  ", out)
+        print("\n[OK] All good — the demo will run with real reasoning (badge 'GPT-4o').")
     except Exception as exc:  # noqa: BLE001
-        print("[X] La llamada falló:", repr(exc))
-        print("\nRevisá endpoint/key/deployment/api-version. El demo caerá a mock automáticamente.")
+        print("[X] The call failed:", repr(exc))
+        print("\nCheck endpoint/key/deployment/api-version. The demo falls back to mock automatically.")
 
 
 if __name__ == "__main__":
