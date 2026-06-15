@@ -119,12 +119,17 @@ class HederaLedger(LocalHashChainLedger):
             )
             receipt = tx.execute(self.client)
             seq = receipt.topic_sequence_number
-            running = receipt.topic_running_hash
+            # running hash is a nice-to-have; some SDK versions raise on access.
+            try:
+                running = receipt.topic_running_hash
+                running_hex = running.hex()[:24] if running else ""
+            except Exception:
+                running_hex = ""
             return {
                 "anchored": True,
                 "topic_id": self.topic_id,
                 "sequence_number": seq,
-                "running_hash": running.hex()[:24] if running else "",
+                "running_hash": running_hex,
                 "sha256": payload_hash,
                 "network": self.network,
                 "hashscan_url": f"https://hashscan.io/{self.network}/topic/{self.topic_id}",
