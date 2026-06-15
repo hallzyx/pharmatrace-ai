@@ -2,7 +2,7 @@
   "suppliers": [
     {
       "id": "SUP-EU-0091",
-      "name": "Nordpharm Distribution GmbH",
+      "name": "Helvora Pharma Logistics GmbH",
       "country": "Germany",
       "region": "EU",
       "certified_by": ["EMA", "FDA"],
@@ -12,7 +12,7 @@
     },
     {
       "id": "SUP-US-0214",
-      "name": "Atlantic MedSupply Inc.",
+      "name": "Carrowind MedSupply Inc.",
       "country": "United States",
       "region": "US",
       "certified_by": ["FDA"],
@@ -22,7 +22,7 @@
     },
     {
       "id": "SUP-CN-7788",
-      "name": "Hongda Trade Logistics Ltd.",
+      "name": "Veymar Trade Logistics Ltd.",
       "country": "China",
       "region": "APAC",
       "certified_by": [],
@@ -33,7 +33,7 @@
     },
     {
       "id": "SUP-MX-3300",
-      "name": "Distribuidora Farmasol S.A. de C.V.",
+      "name": "Distribuidora Quivetra S.A. de C.V.",
       "country": "Mexico",
       "region": "LATAM",
       "certified_by": ["COFEPRIS"],
@@ -43,7 +43,7 @@
     },
     {
       "id": "SUP-IN-4400",
-      "name": "Sunrise Generics Trading Pvt. Ltd.",
+      "name": "Velkora Generics Trading Pvt. Ltd.",
       "country": "India",
       "region": "APAC",
       "certified_by": [],

@@ -18,7 +18,7 @@ from app import notify  # noqa: E402
 
 SAMPLE_REPORT = {
     "batch_id": "MX-2026-4471",
-    "product": "Semaglutide 1mg (Ozempic-equivalent)",
+    "product": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
     "risk_score": 94,
     "risk_band": "CRITICAL",
     "explanation": (

@@ -7,7 +7,7 @@
 
 ## El problema en una oración
 
-Cada año, **más de 1 millón de personas mueren** por medicamentos falsificados o subestándar. En 2026, con el auge de fármacos de alto perfil como Ozempic/semaglutida vendiéndose por canales informales, la cadena farmacéutica nunca ha sido más vulnerable — y los sistemas de trazabilidad siguen siendo fragmentados, manuales e incapaces de actuar en tiempo real.
+Cada año, **más de 1 millón de personas mueren** por medicamentos falsificados o subestándar. En 2026, con el auge de fármacos de alto perfil como los análogos de GLP-1 (semaglutida, tirzepatida) vendiéndose por canales informales, la cadena farmacéutica nunca ha sido más vulnerable — y los sistemas de trazabilidad siguen siendo fragmentados, manuales e incapaces de actuar en tiempo real.
 
 ---
 

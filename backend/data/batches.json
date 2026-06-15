@@ -1,8 +1,8 @@
 {
   "products": {
-    "MX-2026-4471": "Semaglutide 1mg (Ozempic-equivalent)",
-    "NG-2026-7788": "Tirzepatide 5mg (Mounjaro-equivalent)",
-    "BR-2026-5500": "Adalimumab 40mg (Humira-equivalent)",
+    "MX-2026-4471": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
+    "NG-2026-7788": "Tirzepatide 5mg (GLP-1/GIP weight-loss therapy)",
+    "BR-2026-5500": "Adalimumab 40mg (anti-TNF biologic)",
     "IN-2026-3030": "Oseltamivir 75mg",
     "US-2026-1102": "Atorvastatin 20mg",
     "EU-2026-8830": "Insulin Glargine 100U/mL"
@@ -10,7 +10,7 @@
   "ledger_events": [
     {
       "batch_id": "MX-2026-4471",
-      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "product": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
       "serial": "01034500000001-21-4471",
       "supplier_id": "SUP-CN-7788",
       "location": "Shenzhen, China",
@@ -20,7 +20,7 @@
     },
     {
       "batch_id": "MX-2026-4471",
-      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "product": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
       "serial": "01034500000001-21-4471",
       "supplier_id": "SUP-MX-3300",
       "location": "Mexico City, Mexico",
@@ -30,7 +30,7 @@
     },
     {
       "batch_id": "MX-2026-4471",
-      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "product": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
       "serial": "01034500000001-21-4471",
       "supplier_id": "SUP-MX-3300",
       "location": "Mexico City, Mexico",
@@ -40,7 +40,7 @@
     },
     {
       "batch_id": "MX-2026-4471",
-      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "product": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
       "serial": "01034500000001-21-4471",
       "supplier_id": "SUP-EU-0091",
       "location": "Madrid, Spain",
@@ -50,7 +50,7 @@
     },
     {
       "batch_id": "MX-2026-4471",
-      "product": "Semaglutide 1mg (Ozempic-equivalent)",
+      "product": "Semaglutide 1mg (GLP-1 weight-loss therapy)",
       "serial": "01034500000001-21-4471",
       "supplier_id": "SUP-MX-3300",
       "location": "Guadalajara, Mexico",
@@ -60,7 +60,7 @@
     },
     {
       "batch_id": "NG-2026-7788",
-      "product": "Tirzepatide 5mg (Mounjaro-equivalent)",
+      "product": "Tirzepatide 5mg (GLP-1/GIP weight-loss therapy)",
       "serial": "01055500000002-21-7788",
       "supplier_id": "SUP-CN-7788",
       "location": "Shenzhen, China",
@@ -70,7 +70,7 @@
     },
     {
       "batch_id": "NG-2026-7788",
-      "product": "Tirzepatide 5mg (Mounjaro-equivalent)",
+      "product": "Tirzepatide 5mg (GLP-1/GIP weight-loss therapy)",
       "serial": "01055500000002-21-7788",
       "supplier_id": "SUP-US-0214",
       "location": "Newark, USA",
@@ -80,7 +80,7 @@
     },
     {
       "batch_id": "NG-2026-7788",
-      "product": "Tirzepatide 5mg (Mounjaro-equivalent)",
+      "product": "Tirzepatide 5mg (GLP-1/GIP weight-loss therapy)",
       "serial": "01055500000002-21-7788",
       "supplier_id": "SUP-US-0214",
       "location": "Los Angeles, USA",
@@ -90,7 +90,7 @@
     },
     {
       "batch_id": "BR-2026-5500",
-      "product": "Adalimumab 40mg (Humira-equivalent)",
+      "product": "Adalimumab 40mg (anti-TNF biologic)",
       "serial": "01066600000003-21-5500",
       "supplier_id": "SUP-US-0214",
       "location": "Newark, USA",
@@ -100,7 +100,7 @@
     },
     {
       "batch_id": "BR-2026-5500",
-      "product": "Adalimumab 40mg (Humira-equivalent)",
+      "product": "Adalimumab 40mg (anti-TNF biologic)",
       "serial": "01066600000003-21-5500",
       "supplier_id": "SUP-US-0214",
       "location": "Chicago, USA",
@@ -110,7 +110,7 @@
     },
     {
       "batch_id": "BR-2026-5500",
-      "product": "Adalimumab 40mg (Humira-equivalent)",
+      "product": "Adalimumab 40mg (anti-TNF biologic)",
       "serial": "01066600000003-21-5500",
       "supplier_id": "SUP-US-0214",
       "location": "Los Angeles, USA",

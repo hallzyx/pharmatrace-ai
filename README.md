@@ -106,6 +106,15 @@ The header badges in the UI show which mode is active (`GPT-4o` vs `mock`, ledge
 - **Ledger is in-memory** — re-seeded on each server start; hash-chaining is real, persistence is not.
 - **Teams alert is simulated** unless `TEAMS_WEBHOOK_URL` is configured.
 
+## Disclaimer
+
+This is a demonstration prototype built for a hackathon. **All companies, suppliers,
+batches, serial numbers and distribution routes in this project are fictional** and were
+created solely to illustrate the system; any resemblance to real entities is coincidental.
+Drug names refer to **generic active ingredients (INN)**, which are not trademarks. Any
+third-party brand names are the property of their respective owners and imply no affiliation.
+Nothing here constitutes a real regulatory determination about any real product or company.
+
 ## Post-hackathon roadmap
 
 - Swap the local ledger for **Hedera HCS** (interface already in place: `app/ledger.py`).
